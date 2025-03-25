@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using Week2.Constants;
+using Week2.Data;
+using Week2.Dtos;
+using Week2.Entities;
 
 namespace Week2.Controllers
 {
@@ -7,78 +11,37 @@ namespace Week2.Controllers
     [Route("/api/[controller]")]
     public class HomeController : ControllerBase
     {
-        public static List<Item> items = new List<Item>
-        {
-            new Item { Id = Guid.NewGuid(), Name = "Item 1", Description = "Description 1" },
-            new Item { Id = Guid.NewGuid(), Name = "Item 2", Description = "Description 2" },
-        };
+        private readonly ApplicationDbContext _context;
 
-        [HttpGet]
-        public IActionResult GetAll()
+        public HomeController(ApplicationDbContext context)
         {
-            return Ok(items);
+            _context = context;
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
+        [HttpPost("Add")]
+        public IActionResult AddUser([FromBody] InsertUserDto userDto)
         {
-            var item = items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
+            try
             {
-                return NotFound();
+                var user = new User
+                {
+                    FirstName = userDto.FirstName,
+                    LastName = userDto.LastName,
+                    Gender = userDto.Gender,
+                    ImageUrl = userDto.ImageUrl,
+                    RegisteredDate = userDto.RegisteredDate,
+                    isActive = true
+                };
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                return Ok("user added successfully");
+
             }
-            return Ok(item);
+            catch (Exception err)
+            {
+                return BadRequest(new { message = err.Message });
+            }
         }
-
-        [HttpPost]
-        public IActionResult Create([FromBody] Item newItem)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            newItem.Id = Guid.NewGuid();
-            items.Add(newItem);
-            return CreatedAtAction(nameof(GetById), new { id = newItem.Id }, newItem);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody] Item updatedItem)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var item = items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-            item.Name = updatedItem.Name;
-            item.Description = updatedItem.Description;
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var item = items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-            items.Remove(item);
-            return NoContent();
-        }
-    }
-
-    public class Item
-    {
-        public Guid Id { get; set; }
-
-        [Required(ErrorMessage = "Name is required")]
-        public string Name { get; set; }
-
-        public string Description { get; set; }
     }
 }
