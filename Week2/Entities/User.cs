@@ -4,7 +4,7 @@ using Week2.Constants;
 
 namespace Week2.Entities
 {
-    [Table("Users")]
+    [Table("User")]
     public class User
     {
         [Key]
