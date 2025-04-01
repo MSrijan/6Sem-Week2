@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Week2.Data;
+using Week2.Services;
+using Week2.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(i =>
     i.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IUserServices, UserServices>();
 
 var app = builder.Build();
 

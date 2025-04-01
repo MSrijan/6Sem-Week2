@@ -4,43 +4,27 @@ using Week2.Constants;
 using Week2.Data;
 using Week2.Dtos;
 using Week2.Entities;
+using Week2.Services.Interface;
 
 namespace Week2.Controllers
 {
     [ApiController]
     [Route("/api/[controller]")]
-    public class HomeController : ControllerBase
+    public class HomeController(IUserServices userServices) : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
 
-        public HomeController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
 
         [HttpPost("Add")]
         public IActionResult AddUser([FromBody] InsertUserDto userDto)
         {
             try
             {
-                var user = new User
-                {
-                    FirstName = userDto.FirstName,
-                    LastName = userDto.LastName,
-                    Gender = userDto.Gender,
-                    ImageUrl = userDto.ImageUrl,
-                    RegisteredDate = userDto.RegisteredDate,
-                    isActive = true
-                };
-
-                _context.Users.Add(user);
-                _context.SaveChanges();
-                return Ok("user added successfully");
-
+                userServices.AddUser(userDto);
+                return Ok("User added successfully");
             }
-            catch (Exception err)
+            catch (Exception ex)
             {
-                return BadRequest(new { message = err.Message });
+                return BadRequest(ex.Message);
             }
         }
     }
