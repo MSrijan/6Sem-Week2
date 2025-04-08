@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(i =>
     i.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IAddressServices, AddressServices>();
 
 var app = builder.Build();
 
