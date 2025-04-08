@@ -84,7 +84,7 @@ namespace Week2.Services
             }
         }
 
-        public User UpdateUser(Guid id, User user)
+        public User UpdateUser(Guid id, InsertUserDto userDto)
         {
             try
             {
@@ -94,12 +94,12 @@ namespace Week2.Services
                     throw new Exception("User not found");
                 }
 
-                existingUser.FirstName = user.FirstName;
-                existingUser.LastName = user.LastName;
-                existingUser.Gender = user.Gender;
-                existingUser.ImageUrl = user.ImageUrl;
-                existingUser.RegisteredDate = user.RegisteredDate;
-                existingUser.isActive = user.isActive;
+                existingUser.FirstName = userDto.FirstName;
+                existingUser.LastName = userDto.LastName;
+                existingUser.Gender = userDto.Gender;
+                existingUser.ImageUrl = userDto.ImageUrl;
+                existingUser.RegisteredDate = userDto.RegisteredDate;
+                existingUser.isActive = true;
 
                 _context.Users.Update(existingUser);
                 _context.SaveChanges();

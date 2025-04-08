@@ -7,12 +7,12 @@ namespace Week2.Services.Interface
     {
         void AddUser(InsertUserDto userDto);
 
-        List <User> GetAllUsers();
+        List<User> GetAllUsers();
 
         User GetById(Guid id);
 
         void DeleteUser(Guid id);
 
-        void UpdateUser(Guid id, InsertUserDto userDto);
+        User UpdateUser(Guid id, InsertUserDto userDto);
     }
 }
