@@ -35,5 +35,81 @@ namespace Week2.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public List<User> GetAllUsers()
+        {
+            try
+            {
+                var users = _context.Users.ToList();
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public User GetById(Guid id)
+        {
+            try
+            {
+                var user = _context.Users.FirstOrDefault(x => x.Id == id);
+                if (user == null)
+                {
+                    throw new Exception("User not found");
+                }
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void DeleteUser(Guid id)
+        {
+            try
+            {
+                var user = _context.Users.FirstOrDefault(x => x.Id == id);
+                if (user == null)
+                {
+                    throw new Exception("User not found");
+                }
+                _context.Users.Remove(user);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public User UpdateUser(Guid id, User user)
+        {
+            try
+            {
+                var existingUser = _context.Users.FirstOrDefault(x => x.Id == id);
+                if (existingUser == null)
+                {
+                    throw new Exception("User not found");
+                }
+
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.Gender = user.Gender;
+                existingUser.ImageUrl = user.ImageUrl;
+                existingUser.RegisteredDate = user.RegisteredDate;
+                existingUser.isActive = user.isActive;
+
+                _context.Users.Update(existingUser);
+                _context.SaveChanges();
+
+                return existingUser;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

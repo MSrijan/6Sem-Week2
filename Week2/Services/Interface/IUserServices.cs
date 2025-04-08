@@ -1,4 +1,5 @@
 ﻿using Week2.Dtos;
+using Week2.Entities;
 
 namespace Week2.Services.Interface
 {
@@ -6,9 +7,9 @@ namespace Week2.Services.Interface
     {
         void AddUser(InsertUserDto userDto);
 
-        List<GetAllUser> getallUsers();
+        List <User> GetAllUsers();
 
-        GetAllUser GetById(Guid id);
+        User GetById(Guid id);
 
         void DeleteUser(Guid id);
 
